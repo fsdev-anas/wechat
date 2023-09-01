@@ -4,21 +4,27 @@ import Heading from "./Heading";
 const TypingAnimation = ({ texts, currentIndex }) => {
   const [displayText, setDisplayText] = useState("");
   const currentTextObject = texts[currentIndex];
+  const [shouldAnimate, setShouldAnimate] = useState(false);
   let count = 0;
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if (count <= currentTextObject.text.length) {
+      if (shouldAnimate && count <= currentTextObject.text.length) {
         setDisplayText(currentTextObject.text.slice(0, count));
         count++;
       } else {
         count = 0;
-        setDisplayText("");
+        // setDisplayText("");
+        setShouldAnimate(false);
       }
     }, 80); // Adjust the interval as needed
 
     return () => clearInterval(interval);
-  }, [currentIndex, currentTextObject.text]);
+  }, [currentIndex, currentTextObject.text, shouldAnimate]);
+
+  useEffect(() => {
+    setShouldAnimate(true);
+  }, [currentIndex]);
 
   return (
     <div className="total">

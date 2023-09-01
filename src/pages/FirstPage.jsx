@@ -17,7 +17,7 @@ const FirstPage = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % textObjects.length);
-    }, 4000); // Change text every 4 seconds
+    }, 8000); // Change text every 4 seconds
 
     return () => clearInterval(interval);
   }, [textObjects.length]);

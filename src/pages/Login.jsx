@@ -1,74 +1,91 @@
 import React, { useState } from 'react'
+import '@fontsource/roboto/400.css';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Link, useNavigate } from 'react-router-dom';
+import Images from '../components/Images';
+import IMG from '../assets/login.jpg'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Link,useNavigate } from 'react-router-dom';
-import Images from '../components/Images'
-import img from '../assets/login.jpg'
 import Heading from '../components/Heading';
-import Para from '../components/Para';
+import Paragraph from '../components/Paragraph';
 import Alert from '@mui/material/Alert';
-import {AiFillEyeInvisible,AiFillEye} from 'react-icons/ai'
-import { getAuth, signInWithEmailAndPassword,signInWithPopup,GoogleAuthProvider,FacebookAuthProvider } from "firebase/auth";
-import { RotatingLines } from 'react-loader-spinner'
+import {AiFillEye,AiFillEyeInvisible} from 'react-icons/ai'
+import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth'
+import { RotatingLines } from  'react-loader-spinner'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
-  const provider = new GoogleAuthProvider();
-  const provider2 = new FacebookAuthProvider();
-  let navigate = useNavigate();
-  const auth = getAuth();
   let [formData,setFormData] = useState({
     email:"",
     password:""
   });
+  let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
+  let emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+  let [fullnameError,setFullnameError] = useState("");
   let [emailError,setEmailError] = useState("");
   let [passwordError,setPasswordError] = useState("");
-  let [open,setOpen] = useState(false);
-  let [load,setLoad] = useState(false);
+  let [show,setShow] = useState(false);
+
+  const auth = getAuth();
+  let navigate = useNavigate();
+  const provider = new GoogleAuthProvider();
+  const provider2 = new FacebookAuthProvider();
 
   let handleChange = (e) => {
       setFormData({
         ...formData,
         [e.target.name]: e.target.value
       })
-      if (e.target.name == 'email') {
-        setEmailError("");
-      }
-      if (e.target.name == 'password') {
-        setPasswordError("");
-      }
-    }
-    
-    
-    let handleRegistration = () => {
-      let pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-      let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
 
       
+      if (e.target.name == 'email') {
+        setEmailError("")
+      }
+      if (e.target.name == 'password') {
+        setPasswordError("")
+      }
+  }
+  
+  let handleRegistration = () => {
       if (!formData.email) {
         setEmailError("Email Required")
-      }else if (!pattern.test(formData.email)) {
+      }else if(!emailPattern.test(formData.email)){
         setEmailError("Invalid Email")
       }
+
       if (!formData.password) {
         setPasswordError("Password Required")
-      }else if (!passw.test(formData.password)) {
-        setPasswordError("Wrong password!")
+      }else if(!passwordPattern.test(formData.password)){
+        setPasswordError("Invalid Password")
       }
 
-      if (pattern.test(formData.email) && passw.test(formData.password)) {
-        console.log("Done1");
-        setLoad(true)
-        signInWithEmailAndPassword(auth, formData.email, formData.password).then((userCredential)=>{
-          console.log("Done2");
-          setLoad(true)
+      if (emailPattern.test(formData.email) && passwordPattern.test(formData.password)){
+        signInWithEmailAndPassword(auth,formData.email,formData.password).then((userCredential) => {
+          // console.log(userCredential.user);
           let user = userCredential.user
-          // console.log(userCredential);
           if (user.emailVerified) {
-            navigate('/home')
+            setTimeout(() => {
+              navigate('/home')
+            }, 100);
           }else{
-            toast.error('Please verify your email for login first', {
+            toast.success('please verify your email first to login!', {
+              position: "bottom-center",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              progress: undefined,
+              theme: "dark",
+              });
+          }
+        }).catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+
+          if (errorCode.includes("wrong-password")) {
+            toast.success('Wrong Password', {
               position: "bottom-center",
               autoClose: 5000,
               hideProgressBar: false,
@@ -79,117 +96,65 @@ const Login = () => {
               theme: "dark",
               });
           }
-        }).catch((error) => {
-          setLoad(false)
-          // const errorCode = error.code;
-          // const errorMessage = error.message;
-          // console.log(errorCode);
-          // console.log(errorMessage);
-          toast.error('Wrong Password! try again', {
-            position: "bottom-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            });
-
-        })
+        });
       }
-      
   }
 
-  let handleProviderGoggle = () => {
-    signInWithPopup(auth, provider).then(() => {
-      // console.log("done");
+  let handleGoogle = () => {
+    signInWithPopup(auth, provider).then((result) => {
       navigate('/home')
     })
-
   }
-  let handleProviderFb = () => {
+  let handleFb = () => {
     signInWithPopup(auth, provider2).then((result) => {
-      // console.log("done");
-      // The signed-in user info.
-    const user = result.user;
-
-    // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-    const credential = FacebookAuthProvider.credentialFromResult(result);
-    const accessToken = credential.accessToken;
-
-    // IdP data available using 
-    getAdditionalUserInfo(result)
-    // ...
-      console.log('done');
       navigate('/home')
-    }).catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      // The email of the user's account used.
-      const email = error.customData.email;
-      // The AuthCredential type that was used.
-      const credential = FacebookAuthProvider.credentialFromError(error);
-  
-      // ...
-    });
-
+    })
   }
-  
   
   
 
   return (
-    <div className='registration'>
+    <>
+      <Grid container>
+      <Grid xs={7}>
         <div className="left">
-            <div className="text-container">
-                <Heading className='h1' title='Get started with easily register' />
-                <Para className='p' title='Free register and you can enjoy it' />
-                <Button onClick={handleProviderGoggle} className='' color='success' variant="contained">Google Sign In</Button>
-                <Button onClick={handleProviderFb} className='fb' variant="outlined">Facebook Sign In</Button>
-                <TextField name='email' onChange={handleChange} className='inputCSS' type='email' id="filled-basic" label="Email" variant="filled" value={formData.email} />
-                {emailError &&
-                  <Alert variant="filled" severity="error">
-                    {emailError}
-                  </Alert>
-                }
-                <TextField name='password' onChange={handleChange} className='inputCSS' type={open?'text':'password'} id="filled-basic" label="Password" variant="filled" value={formData.password} />
-                {open?
-                <AiFillEye onClick={() => setOpen(false)} className='hide' />
-                :
-                <AiFillEyeInvisible onClick={() => setOpen(true)} className='hide' />
-                }
-                {passwordError &&
-                  <Alert variant="filled" severity="error">
-                    {passwordError}
-                  </Alert>
-                }
-                {load?
-                <Button onClick={handleRegistration} className='regButton' variant="contained" disabled>
-                  <RotatingLines
-                    strokeColor="grey"
-                    strokeWidth="2"
-                    animationDuration="0.75"
-                    width="30"
-                    visible={true}
-                  />
-                </Button>
-                :
-                <Button onClick={handleRegistration} className='regButton' variant="contained">Sign Up</Button>
-                }
-                <Para className='sign'>
-                  Don’t have an account ? <Link to="/registration" className='focus'>Sign Up</Link>
-                </Para>
-                <Para className='forgot'>
-                  Forgot Password ? <Link to="/forgotpassword" className='focus'>Click Here</Link>
-                </Para>
-            </div>
+          <Grid smOffset={5} sx={{ pt:12 }}>
+              <Heading className='Heading' title='Sign In to Facebook' />
+              <Paragraph title="Your social platform" />
+              <Button onClick={handleGoogle} sx={{ mt:3, ml:0, py:1, width:'40%' }} variant="contained">Sign in with Google</Button>
+              <Button onClick={handleFb} sx={{ mt:3, ml:2, py:1, width:'45%' }} variant="outlined">Sign in with Facebook</Button>
+              <TextField onChange={handleChange} name='email' sx={{ mt:3, width:'90%' }} type='email' id="filled-basic" label="Email" variant="filled" />
+              {emailError &&
+              <Alert sx={{width:'83%' }} variant="filled" severity="error">
+                {emailError}
+              </Alert>
+              }
+              <TextField onChange={handleChange} name='password' sx={{ mt:3, width:'90%' }} type={show?'text':'password'} id="filled-basic" label="Password" variant="filled" />
+              {show?
+              <AiFillEyeInvisible onClick={() => setShow(false)} className='eyecon' />
+              :
+              <AiFillEye onClick={() => setShow(true)} className='eyecon' />
+              }
+              {passwordError &&
+              <Alert sx={{ width:'83%' }} variant="filled" severity="error">
+                {passwordError}
+              </Alert>
+              }
+              <Button onClick={handleRegistration} sx={{ mt:5, mb:3, py:1, width:'90%' }} variant="contained">Login to Continue</Button>
+              <Paragraph className='Paragraph' title="Forgot Password?"><Link to='/forgotpassword' className='focus'>Reset</Link></Paragraph>
+              <Paragraph className='Paragraph2' title="Don't have an account?"><Link to='/registration' className='focus'>Sign Up</Link></Paragraph>
+          </Grid>
         </div>
+      </Grid>
+      <Grid xs={5}>
         <div className="right">
-            <Images src={img} alt='image' className='bg' />
+          <Link>
+            <Images className='img' src={IMG} alt='img' />
+          </Link>
         </div>
-    </div>
+      </Grid>
+    </Grid>
+    </>
   )
 }
 

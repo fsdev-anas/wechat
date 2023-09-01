@@ -1,107 +1,104 @@
 import React, { useState } from 'react'
+import '@fontsource/roboto/400.css';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Link, useNavigate } from 'react-router-dom';
+import Images from '../components/Images';
+import IMG from '../assets/auth.jpg'
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Link,useNavigate } from 'react-router-dom';
-import Images from '../components/Images'
-import img from '../assets/auth.jpg'
 import Heading from '../components/Heading';
-import Para from '../components/Para';
+import Paragraph from '../components/Paragraph';
 import Alert from '@mui/material/Alert';
-import {AiFillEyeInvisible,AiFillEye} from 'react-icons/ai'
-import { getAuth, createUserWithEmailAndPassword,sendEmailVerification } from "firebase/auth";
-import { RotatingLines } from 'react-loader-spinner'
+import {AiFillEye,AiFillEyeInvisible} from 'react-icons/ai'
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification} from 'firebase/auth'
+import { RotatingLines } from  'react-loader-spinner'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const Registration = () => {
-  let navigate = useNavigate();
-  const auth = getAuth();
   let [formData,setFormData] = useState({
     fullname:"",
     email:"",
-    password:""
+    password:"",
   });
-  let [fullNameError,setFullNameError] = useState("");
+  let passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/
+  let emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+  let [fullnameError,setFullnameError] = useState("");
   let [emailError,setEmailError] = useState("");
   let [passwordError,setPasswordError] = useState("");
-  let [open,setOpen] = useState(false);
+  let [show,setShow] = useState(false);
   let [load,setLoad] = useState(false);
+  let navigate = useNavigate();
+
+  const auth = getAuth();
 
   let handleChange = (e) => {
       setFormData({
         ...formData,
         [e.target.name]: e.target.value
       })
+
       if (e.target.name == 'fullname') {
-        setFullNameError("");
+        setFullnameError("")
       }
       if (e.target.name == 'email') {
-        setEmailError("");
+        setEmailError("")
       }
       if (e.target.name == 'password') {
-        setPasswordError("");
+        setPasswordError("")
       }
-    }
-    
-    
-    let handleRegistration = () => {
-      let pattern = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-      let passw = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/
-
+  }
+  
+  let handleRegistration = () => {
       if (!formData.fullname) {
-        setFullNameError("Name Required")
-      }else if (!(formData.fullname.length >= 3)) {
-        setFullNameError("Invalid Name")
+        setFullnameError("Fullname Required")
       }
+      
       if (!formData.email) {
         setEmailError("Email Required")
-      }else if (!pattern.test(formData.email)) {
+      }else if(!emailPattern.test(formData.email)){
         setEmailError("Invalid Email")
       }
+
       if (!formData.password) {
         setPasswordError("Password Required")
-      }else if (!passw.test(formData.password)) {
-        setPasswordError("Password not Strong!")
+      }else if(!passwordPattern.test(formData.password)){
+        setPasswordError("Invalid Password")
       }
 
-      if ((formData.fullname.length >= 3) && pattern.test(formData.email) && passw.test(formData.password)) {
-        console.log("Done1");
+      if (emailPattern.test(formData.email) && passwordPattern.test(formData.password)) {
+        console.log("thik ase");
         setLoad(true)
-        createUserWithEmailAndPassword (auth, formData.email, formData.password).then(() => {
-          console.log("done2");
+        createUserWithEmailAndPassword(auth,formData.email,formData.password).then(() => {
           sendEmailVerification(auth.currentUser).then(() => {
-            console.log('done3');
+            console.log("done");
             setFormData({
               fullname:"",
               email:"",
-              password:""
+              password:"",
             })
-            setLoad(false);
-            // toast("Wow so easy!");
-            toast.success('Registration Successfull!', {
+            toast.success('Registration Successfull, please verify your email!', {
               position: "bottom-center",
-              autoClose: 5000,
+              autoClose: 3000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: "light",
+              theme: "dark",
               });
 
               setTimeout(() => {
-                navigate("/login")
-              },1000)
-            });
+                navigate('/login')
+              }, 100);
+          })
+          setLoad(false)
         }).catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log(errorCode,errorMessage);
-          setLoad(false);
-          // setEmailError(errorCode)
-          // setEmailError("Email already exists")
+          
           if (errorCode.includes("email")) {
-            toast.error('Email already exists!', {
+            toast.success('This Email already exists!', {
               position: "bottom-center",
               autoClose: 5000,
               hideProgressBar: false,
@@ -109,66 +106,73 @@ const Registration = () => {
               pauseOnHover: true,
               draggable: true,
               progress: undefined,
-              theme: "light",
+              theme: "dark",
               });
           }
+          
+          setLoad(false)
         });
       }
-      
   }
   
 
   return (
-    <div className='registration'>
+    <>
+      <Grid container>
+      <Grid xs={7}>
         <div className="left">
-            <div className="text-container">
-                <Heading className='h1' title='Get started with easily register' />
-                <Para className='p' title='Free register and you can enjoy it' />
-                <TextField name='fullname' onChange={handleChange} className='inputCSS' type='text' id="filled-basic" label="Full Name" variant="filled" value={formData.fullname} />
-                {fullNameError &&
-                  <Alert variant="filled" severity="error">
-                    {fullNameError}
-                  </Alert>
-                }
-                <TextField name='email' onChange={handleChange} className='inputCSS' type='email' id="filled-basic" label="Email" variant="filled" value={formData.email} />
-                {emailError &&
-                  <Alert variant="filled" severity="error">
-                    {emailError}
-                  </Alert>
-                }
-                <TextField name='password' onChange={handleChange} className='inputCSS' type={open?'text':'password'} id="filled-basic" label="Password" variant="filled" value={formData.password} />
-                {open?
-                <AiFillEye onClick={() => setOpen(false)} className='hide' />
-                :
-                <AiFillEyeInvisible onClick={() => setOpen(true)} className='hide' />
-                }
-                {passwordError &&
-                  <Alert variant="filled" severity="error">
-                    {passwordError}
-                  </Alert>
-                }
-                {load?
-                <Button onClick={handleRegistration} className='regButton' variant="contained" disabled>
-                  <RotatingLines
-                    strokeColor="grey"
-                    strokeWidth="2"
-                    animationDuration="0.75"
-                    width="30"
-                    visible={true}
-                  />
-                </Button>
-                :
-                <Button onClick={handleRegistration} className='regButton' variant="contained">Sign Up</Button>
-                }
-                <Para className='sign'>
-                  Already have an account ? <Link to="/login" className='focus'>Sign in</Link>
-                </Para>
-            </div>
+          <Grid smOffset={5} sx={{ pt:12 }}>
+              <Heading className='Heading' title='Get started with easily register' />
+              <Paragraph title="Free register and you can enjoy it" />
+              <TextField onChange={handleChange} name='fullname' sx={{ mt:3, width:'90%' }}  type='text' id="filled-basic" label="Full Name" variant="filled" value={formData.fullname} />
+              {fullnameError &&
+              <Alert sx={{width:'83%' }} variant="filled" severity="error">
+                {fullnameError}
+              </Alert>
+              }
+              <TextField onChange={handleChange} name='email' sx={{ mt:3, width:'90%' }} type='email' id="filled-basic" label="Email" variant="filled" value={formData.email} />
+              {emailError &&
+              <Alert sx={{width:'83%' }} variant="filled" severity="error">
+                {emailError}
+              </Alert>
+              }
+              <TextField onChange={handleChange} name='password' sx={{ mt:3, width:'90%' }} type={show?'text':'password'} id="filled-basic" label="Password" variant="filled" value={formData.password} />
+              {show?
+              <AiFillEyeInvisible onClick={() => setShow(false)} className='eyecon' />
+              :
+              <AiFillEye onClick={() => setShow(true)} className='eyecon' />
+              }
+              {passwordError &&
+              <Alert sx={{ width:'83%' }} variant="filled" severity="error">
+                {passwordError}
+              </Alert>
+              }
+              {load?
+              <Button onClick={handleRegistration} sx={{ mt:5, mb:3, py:1, width:'90%' }} variant="contained" disabled >
+                <RotatingLines
+                  strokeColor="grey"
+                  strokeWidth="2"
+                  animationDuration="0.75"
+                  width="30"
+                  visible={true}
+                />
+              </Button>
+              :
+              <Button onClick={handleRegistration} sx={{ mt:5, mb:3, py:1, width:'90%' }} variant="contained">Register</Button>
+              }
+              <Paragraph className='Paragraph' title="Already have an account?"><Link to='/login' className='focus'>Sign In</Link></Paragraph>
+          </Grid>
         </div>
+      </Grid>
+      <Grid xs={5}>
         <div className="right">
-            <Images src={img} alt='image' className='bg' />
+          <Link>
+            <Images className='img' src={IMG} alt='img' />
+          </Link>
         </div>
-    </div>
+      </Grid>
+    </Grid>
+    </>
   )
 }
 

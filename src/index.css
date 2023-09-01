@@ -99,99 +99,26 @@
 
 /* Registration & Login */
 
-.registration{
-  display: flex;
-}
-
-.registration .left{
+.right .img{
   height: 100vh;
-  width: 50%;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 105px;
-  margin-right: 69px;
-}
-
-.registration .left .text-container .h1{
-  margin-bottom: 13px;
-  color: #03014C;
-}
-.registration .left .text-container .p{
-  color: #000;
-  margin-bottom: 15px;
-}
-.registration .left .text-container{
-  width: 60%;
-}
-
-
-.registration .right{
-  height: 100vh;
-  width: 50%;
-}
-
-.registration .right .bg{
   width: 100%;
-  height: 100%;
   object-fit: cover;
-  }
-
-.inputCSS{
-  width: 370px;
-  margin-top: 30px !important;
 }
 
-.regButton{
-  width: 370px;
-  padding: 15px 0 !important;
-  border-radius: 50px !important;
-  margin-bottom: 35px !important;
-  margin-top: 35px !important;
+.Heading{
+  padding-bottom: 14px;
 }
-
 .focus{
-  font-family: bold;
   color: orange;
 }
 
-.sign{
-  padding-left: 60px;
-  margin-bottom: 20px !important;
-}
-.forgot{
-  padding-left: 60px;
-  margin-top: 20px !important;
-}
-
-.hide{
+.eyecon{
   position: relative;
-  top: 50px;
+  top: 43px;
   right: 30px;
   font-size: larger;
 }
 
-.forgotbox{
-  display: flex;
-  justify-content: center;
-  align-items:center;
-  width: 100%;
-  height: 100vh;
-}
-
-.forgotpassword{
-  padding: 30px;
-  background-color: #dfd9d3;
-  max-width: 300px;
-  max-height: 250px;
-  text-align: center;
-  border: 3px solid rgb(57, 53, 53);
-}
-
-.forgotBTN{
-  margin-top: 20px !important;
-  margin-left: 10px !important;
-}
-
-.fb{
-  margin-left: 10px !important;
+.Paragraph2{
+  margin-top: 12px !important
 }

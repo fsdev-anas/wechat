@@ -1,63 +1,64 @@
 import React, { useState } from 'react'
+import '@fontsource/roboto/400.css';
+import Grid from '@mui/material/Unstable_Grid2';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Alert from '@mui/material/Alert';
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
+import { green, grey } from '@mui/material/colors';
+import Heading from '../components/Heading';
+import Paragraph from '../components/Paragraph';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import { Link,useNavigate } from 'react-router-dom';
 
-const Forgotpassword = () => {
-  let navigate = useNavigate();
-  const auth = getAuth();
-  let [email,setEmail] = useState("");
+const ForgotPassword = () => {
+    let [email,setEmail] = useState("");
+    const auth = getAuth();
+    let navigate = useNavigate();
 
-  let handleForgotpassword = () => {
-    sendPasswordResetEmail(auth, email).then(() => {
-        toast.success('Password change request sent, check Email!', {
-            position: "bottom-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
+    let handleForgot = () => {
+        sendPasswordResetEmail(auth, email).then(() => {
+            toast.success('Check Email for Reset your Password', {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
             });
-
             setTimeout(() => {
-                navigate("/login")
-            },3000)
-
+                navigate('/login')
+            }, 100);
     }).catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        if (errorCode.includes("user")) {
-            toast.error('User doesnt exist with this Email! Please Enter registered Email', {
-              position: "bottom-center",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "light",
-              });
-          }
-      });
+        // console.log(errorCode,errorMessage);
+        if (errorCode.includes('user-not-found')) {
+            toast.success('User Not Exists with this Email', {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                });
+        }
+    });
+    }
     
-  }
-  
 
   return (
-    <div className="forgotbox">
-        <div className="forgotpassword">
-        <TextField name='email' onChange={(e) => setEmail(e.target.value)} className='' type='email' id="outlined-basic" label="Email" variant="outlined" />
-        <Button onClick={handleForgotpassword} className='forgotBTN' variant="contained">Enter</Button><br />
-        <Link to='/login'><Button className='forgotBTN' variant="contained">Back</Button></Link>
-        </div>
-    </div>
+    <Grid container>
+        <Grid smOffset={3} xs={7} sx={{mt:15, p:25, background:'#4caf50'}}>
+            <Paragraph title='Enter Your existing Email to reset Password' />
+            <TextField onChange={(e) => setEmail(e.target.value)} name='email' sx={{ mt:3, mb:3, width:'90%' }} type='email' id="filled-basic" label="Email" variant="filled" />
+            <Button onClick={handleForgot} sx={{py:1}} variant="contained">Forgot Password</Button>
+        </Grid>
+    </Grid>
   )
 }
 
-export default Forgotpassword
+export default ForgotPassword
