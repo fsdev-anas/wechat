@@ -10,7 +10,7 @@ import Registration from './pages/Registration'
 import Login from './pages/Login'
 import Home from './pages/Home'
 import { ToastContainer, toast } from 'react-toastify';
-import ForgotPassword from './pages/ForgotPassword'
+import Forgotpassword from './pages/Forgotpassword'
 
 function App() {
 
@@ -19,7 +19,7 @@ function App() {
       <Route path='/' element={<Registration />} />
       <Route path='/login' element={<Login />} />
       <Route path='/home' element={<Home />} />
-      <Route path='/forgotpassword' element={<ForgotPassword />} />
+      <Route path='/forgotpassword' element={<Forgotpassword />} />
     </Route>
   ))
 

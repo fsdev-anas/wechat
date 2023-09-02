@@ -10,7 +10,7 @@ import Heading from '../components/Heading';
 import Paragraph from '../components/Paragraph';
 import { toast } from 'react-toastify';
 
-const ForgotPassword = () => {
+const Forgotpassword = () => {
     let [email,setEmail] = useState("");
     const auth = getAuth();
     let navigate = useNavigate();
@@ -61,4 +61,4 @@ const ForgotPassword = () => {
   )
 }
 
-export default ForgotPassword
+export default Forgotpassword
