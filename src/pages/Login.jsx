@@ -142,7 +142,7 @@ const Login = () => {
               }
               <Button onClick={handleRegistration} sx={{ mt:5, mb:3, py:1, width:'90%' }} variant="contained">Login to Continue</Button>
               <Paragraph className='Paragraph' title="Forgot Password?"><Link to='/forgotpassword' className='focus'>Reset</Link></Paragraph>
-              <Paragraph className='Paragraph2' title="Don't have an account?"><Link to='/registration' className='focus'>Sign Up</Link></Paragraph>
+              <Paragraph className='Paragraph2' title="Don't have an account?"><Link to='/' className='focus'>Sign Up</Link></Paragraph>
           </Grid>
         </div>
       </Grid>

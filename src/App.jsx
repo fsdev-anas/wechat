@@ -1,44 +1,32 @@
+import React from 'react'
 import {
   RouterProvider,
   createBrowserRouter,
   createRoutesFromElements,
   Route,
-  Link
+  Link,
 } from 'react-router-dom'
-import Login from './pages/Login'
 import Registration from './pages/Registration'
+import Login from './pages/Login'
+import Home from './pages/Home'
 import { ToastContainer, toast } from 'react-toastify';
-import Home from './pages/Home';
-import FirstPage from './pages/FirstPage'
-import Forgotpassword from './pages/ForgotPassword';
-import RootLayout from './pages/RootLayout';
+import ForgotPassword from './pages/ForgotPassword'
 
 function App() {
-	const router = createBrowserRouter(createRoutesFromElements(
-      <Route path='/' element={<RootLayout />}>
-        <Route path='/' element={<FirstPage />} />
-        <Route path='/registration' element={<Registration />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/home' element={<Home />} />
-        <Route path='/forgotpassword' element={<Forgotpassword />} />
-      </Route>
+
+  const router = createBrowserRouter(createRoutesFromElements(
+    <Route>
+      <Route path='/' element={<Registration />} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/home' element={<Home />} />
+      <Route path='/forgotpassword' element={<ForgotPassword />} />
+    </Route>
   ))
 
-  return(
+  return (
     <>
       <RouterProvider router={router} />
-      <ToastContainer
-        // position="bottom-center"
-        // autoClose={5000}
-        // hideProgressBar={false}
-        // newestOnTop={false}
-        // closeOnClick
-        // rtl={false}
-        // pauseOnFocusLoss
-        // draggable
-        // pauseOnHover
-        // theme="dark"
-      />
+      <ToastContainer />
     </>
   )
 }

@@ -1,124 +1,27 @@
 *{
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
-
-
-
-
-
-
-.firstpage {
-  display: flex;
-}
-
-.firstpage .left{
-  height: 100vh;
-  width: 55%;
-  background-color:rgb(0, 0, 46);
-}
-
-.firstpage .left .firstHeading{
-  color: #FE7600;
-  position: relative;
-  display: inline-block;
-  margin: 50px 0 0 50px;
-  font-size: 35px;
-}
-
-.firstpage .left .firstHeading::after{
-  color: #FE7600;
-  content: "";
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: -23px;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: #FE7600;
-}
-
-.firstpage .right{
-  margin-top: 200px;
-  margin-left: 50px;
-}
-
-.firstpage .right .firstHeading{
-  font-weight: bolder;
-  font-size: 48px;
-  text-align: center;
-  margin-bottom: 15px;
-}
-
-.firstpage .right .Button1{
-  height: 70px;
-  width: 250px;
-}
-
-.firstpage .right .Button2{
-  height: 70px;
-  width: 250px;
-  margin-left: 15px;
-}
-
-.title{
-  color: #72706e;
-  transition: all 5s ease-in;
-  
-}
-
-.type{
-  color: #FE7600;
-  font-size: 35px;
-}
-
-.total{
-  font-size: 25px;
-  padding-left: 50px;
-  padding-top: 100px;
-}
-
-.type{
-  position: relative;
-  display: inline-block;
-}
-
-.type::after{
-  content: "";
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  right: -30px;
-  width: 25px;
-  height: 25px;
-  border-radius: 50%;
-  background: #FE7600;
-}
-
-
-/* Registration & Login */
-
 .right .img{
-  height: 100vh;
-  width: 100%;
-  object-fit: cover;
+    height: 100vh;
+    width: 100%;
+    object-fit: cover;
 }
 
 .Heading{
-  padding-bottom: 14px;
+    padding-bottom: 14px;
 }
 .focus{
-  color: orange;
+    color: orange;
 }
 
 .eyecon{
-  position: relative;
-  top: 43px;
-  right: 30px;
-  font-size: larger;
+    position: relative;
+    top: 43px;
+    right: 30px;
+    font-size: larger;
 }
 
 .Paragraph2{
-  margin-top: 12px !important
+    margin-top: 12px !important
 }

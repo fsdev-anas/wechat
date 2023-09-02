@@ -1,23 +1,23 @@
 import React from 'react'
 import Button from '@mui/material/Button';
-import { getAuth, signOut } from "firebase/auth";
-import { useNavigate } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
+import { getAuth, signOut } from 'firebase/auth'
 
 const Home = () => {
-  let navigate = useNavigate();
   const auth = getAuth();
-  
-  let handleLogout = () => {
-    signOut(auth).then(() => {
-      navigate('/login')
-    })
-      
+  let navigate = useNavigate();
+
+  let handleButton = () => {
+      signOut(auth).then(() => {
+        setTimeout(() => {
+          navigate('/login')
+        }, 100);
+      })
   }
   
 
   return (
-    <Button onClick={handleLogout} variant="contained">Log Out</Button>
+    <Button onClick={handleButton} sx={{ mt:65, ml:73, py:1, width:'12%' }} variant="contained">Sign Out</Button>
   )
 }
 
