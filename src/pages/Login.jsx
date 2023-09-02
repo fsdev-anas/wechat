@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '@fontsource/roboto/400.css';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,6 +14,8 @@ import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvide
 import { RotatingLines } from  'react-loader-spinner'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { logedUser } from '../slices/userSlice';
 
 const Login = () => {
   let [formData,setFormData] = useState({
@@ -27,8 +29,17 @@ const Login = () => {
   let [passwordError,setPasswordError] = useState("");
   let [show,setShow] = useState(false);
 
+  let data = useSelector((state) => state.loginUser.value)
+
+  useEffect(() => {
+    if (data) {
+      navigate('/home')
+    }
+  }, [])
+
   const auth = getAuth();
   let navigate = useNavigate();
+  let dispatch = useDispatch();
   const provider = new GoogleAuthProvider();
   const provider2 = new FacebookAuthProvider();
 
@@ -65,6 +76,8 @@ const Login = () => {
           // console.log(userCredential.user);
           let user = userCredential.user
           if (user.emailVerified) {
+            dispatch(logedUser(user))
+            localStorage.setItem("user",JSON.stringify(user))
             setTimeout(() => {
               navigate('/home')
             }, 100);
@@ -122,7 +135,7 @@ const Login = () => {
               <Heading className='Heading' title='Sign In to Facebook' />
               <Paragraph title="Your social platform" />
               <Button onClick={handleGoogle} sx={{ mt:3, ml:0, py:1, width:'40%' }} variant="contained">Sign in with Google</Button>
-              <Button onClick={handleFb} sx={{ mt:3, ml:2, py:1, width:'45%' }} variant="outlined">Sign in with Facebook</Button>
+              <Button onClick={handleFb} sx={{ mt:3, ml:2, py:1, width:'45%', fontWeight:600 }} variant="outlined">Sign in with Facebook</Button>
               <TextField onChange={handleChange} name='email' sx={{ mt:3, width:'90%' }} type='email' id="filled-basic" label="Email" variant="filled" />
               {emailError &&
               <Alert sx={{width:'83%' }} variant="filled" severity="error">

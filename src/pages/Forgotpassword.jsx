@@ -52,10 +52,11 @@ const Forgotpassword = () => {
 
   return (
     <Grid container>
-        <Grid smOffset={3} xs={7} sx={{mt:15, p:25, background:'#4caf50'}}>
+        <Grid smOffset={3} xs={7} sx={{mt:8, p:25, background:'#4caf50'}}>
             <Paragraph title='Enter Your existing Email to reset Password' />
             <TextField onChange={(e) => setEmail(e.target.value)} name='email' sx={{ mt:3, mb:3, width:'90%' }} type='email' id="filled-basic" label="Email" variant="filled" />
-            <Button onClick={handleForgot} sx={{py:1}} variant="contained">Forgot Password</Button>
+            <Button onClick={handleForgot} sx={{py:1}} variant="contained">Send Reset Request</Button>
+            <Button onClick={() => navigate('/login')} sx={{py:1, ml:2, color:'white'}} variant="outlined">Back</Button>
         </Grid>
     </Grid>
   )
