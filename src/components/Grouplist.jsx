@@ -2,7 +2,7 @@ import React from 'react'
 import Heading from './Heading'
 import Button from '@mui/material/Button';
 import Images from './Images'
-import GroupImg from '../assets/GroupImg.png'
+import GroupImg from '../assets/Groupimg.png'
 import Paragraph from './Paragraph';
 
 const Grouplist = () => {
