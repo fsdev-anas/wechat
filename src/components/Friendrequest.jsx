@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Heading from './Heading'
 import Button from '@mui/material/Button';
 import Images from './Images'
-import GroupImg from '../assets/GroupImg.png'
+import GroupImg from '../assets/groupimg.png'
 import Paragraph from './Paragraph';
 import { getDatabase, ref, onValue, remove } from "firebase/database";
 import { useDispatch, useSelector } from 'react-redux';
