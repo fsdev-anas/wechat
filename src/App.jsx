@@ -14,6 +14,7 @@ import Forgotpassword from './pages/Forgotpassword'
 import Messenger from './pages/Messenger'
 import Notification from './pages/Notification'
 import RootLayout from './pages/RootLayout'
+import Settings from './pages/Settings'
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
         <Route path='/home' element={<Home />} />
         <Route path='/msg' element={<Messenger />} />
         <Route path='/notification' element={<Notification />} />
+        <Route path='/settings' element={<Settings />} />
       </Route>
     </Route>
   ))

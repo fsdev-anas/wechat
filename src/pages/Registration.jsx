@@ -10,7 +10,8 @@ import Heading from '../components/Heading';
 import Paragraph from '../components/Paragraph';
 import Alert from '@mui/material/Alert';
 import {AiFillEye,AiFillEyeInvisible} from 'react-icons/ai'
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification} from 'firebase/auth'
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth'
+import { getDatabase, ref, set, push } from "firebase/database";
 import { RotatingLines } from  'react-loader-spinner'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -31,6 +32,7 @@ const Registration = () => {
   let navigate = useNavigate();
 
   const auth = getAuth();
+  const db = getDatabase();
 
   let handleChange = (e) => {
       setFormData({
@@ -67,37 +69,48 @@ const Registration = () => {
       }
 
       if (emailPattern.test(formData.email) && passwordPattern.test(formData.password)) {
-        console.log("thik ase");
         setLoad(true)
-        createUserWithEmailAndPassword(auth,formData.email,formData.password).then(() => {
-          sendEmailVerification(auth.currentUser).then(() => {
-            console.log("done");
-            setFormData({
-              fullname:"",
-              email:"",
-              password:"",
+        createUserWithEmailAndPassword(auth,formData.email,formData.password).then((userCredential) => {
+          const user = userCredential.user;
+          updateProfile(auth.currentUser, {
+            displayName: formData.fullname, 
+            photoURL: "https://firebasestorage.googleapis.com/v0/b/practice-3e967.appspot.com/o/a.jpg?alt=media&token=6cfa56bf-ad5f-417b-bfed-feb3000d4e8a"
+          }).then(() => {
+            sendEmailVerification(auth.currentUser).then(() => {
+              setLoad(false)
+              setFormData({
+                fullname:"",
+                email:"",
+                password:"",
+              })
+              toast.success('Registration Successfull, please verify your email!', {
+                position: "bottom-center",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                });
+  
+                setTimeout(() => {
+                  navigate('/login')
+                }, 100);
+            }).then(() => {
+              set(ref(db, 'users/'+ user.uid), {
+                username: formData.fullname,
+                email: formData.email,
+                profile_picture: user.photoURL
+              })
             })
-            toast.success('Registration Successfull, please verify your email!', {
-              position: "bottom-center",
-              autoClose: 3000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "dark",
-              });
-
-              setTimeout(() => {
-                navigate('/login')
-              }, 100);
           })
-          setLoad(false)
+
         }).catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           
-          if (errorCode.includes("email")) {
+          if (errorCode && errorCode.includes("email")) {
             toast.success('This Email already exists!', {
               position: "bottom-center",
               autoClose: 5000,

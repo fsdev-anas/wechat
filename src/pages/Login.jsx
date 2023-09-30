@@ -11,6 +11,7 @@ import Paragraph from '../components/Paragraph';
 import Alert from '@mui/material/Alert';
 import {AiFillEye,AiFillEyeInvisible} from 'react-icons/ai'
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, FacebookAuthProvider } from 'firebase/auth'
+import { getDatabase, ref, set } from "firebase/database";
 import { RotatingLines } from  'react-loader-spinner'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -38,6 +39,7 @@ const Login = () => {
   }, [])
 
   const auth = getAuth();
+  const db = getDatabase();
   let navigate = useNavigate();
   let dispatch = useDispatch();
   const provider = new GoogleAuthProvider();
@@ -73,18 +75,42 @@ const Login = () => {
 
       if (emailPattern.test(formData.email) && passwordPattern.test(formData.password)){
         signInWithEmailAndPassword(auth,formData.email,formData.password).then((userCredential) => {
-          // console.log(userCredential.user);
-          let user = userCredential.user
-          if (user.emailVerified) {
-            dispatch(logedUser(user))
-            localStorage.setItem("user",JSON.stringify(user))
-            setTimeout(() => {
-              navigate('/home')
-            }, 100);
-          }else{
-            toast.success('please verify your email first to login!', {
+          const userData = userCredential.user;
+          console.log(userData);
+          // if (user.emailVerified) {
+          const user = {
+            // Store only the necessary user data here
+            uid: userData.uid,
+            email: userData.email,
+            displayName: userData.displayName,
+            photoURL: userData.photoURL,
+          };
+          dispatch(logedUser(user)); // Dispatch with serializable data
+          localStorage.setItem("user", JSON.stringify(user));
+          setTimeout(() => {
+            navigate('/home')
+          }, 100);
+          // }else{
+          //   toast.success('please verify your email first to login!', {
+          //     position: "bottom-center",
+          //     autoClose: 3000,
+          //     hideProgressBar: false,
+          //     closeOnClick: true,
+          //     pauseOnHover: true,
+          //     draggable: true,
+          //     progress: undefined,
+          //     theme: "dark",
+          //     });
+          // }
+        }).catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          console.log(errorCode);
+
+          if (errorCode && errorCode.includes("user-not-found")) {
+            toast.success('User not Found', {
               position: "bottom-center",
-              autoClose: 3000,
+              autoClose: 1000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -93,14 +119,10 @@ const Login = () => {
               theme: "dark",
               });
           }
-        }).catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-
-          if (errorCode.includes("wrong-password")) {
+          if (errorCode && errorCode.includes("wrong-password")) {
             toast.success('Wrong Password', {
               position: "bottom-center",
-              autoClose: 5000,
+              autoClose: 2000,
               hideProgressBar: false,
               closeOnClick: true,
               pauseOnHover: true,
@@ -114,13 +136,43 @@ const Login = () => {
   }
 
   let handleGoogle = () => {
-    signInWithPopup(auth, provider).then((result) => {
+    signInWithPopup(auth, provider).then((userCredential) => {
       navigate('/home')
+      const userData = userCredential.user;
+      const user = {
+        // Store only the necessary user data here
+        uid: userData.uid,
+        email: userData.email,
+        displayName: userData.displayName,
+        photoURL: userData.photoURL,
+      };      dispatch(logedUser(user)); // Dispatch with serializable data
+      localStorage.setItem("user", JSON.stringify(user));
+      set(ref(db, 'users/'+ userData.uid), {
+        username: userData.displayName,
+        email: userData.email,
+        profile_picture: userData.photoURL
+      })
     })
   }
   let handleFb = () => {
-    signInWithPopup(auth, provider2).then((result) => {
+    signInWithPopup(auth, provider2).then((userCredential) => {
       navigate('/home')
+      const userData = userCredential.user;
+      console.log(userData);
+      const user = {
+        // Store only the necessary user data here
+        uid: userData.uid,
+        email: userData.email,
+        displayName: userData.displayName,
+        photoURL: userData.photoURL,
+      };
+      dispatch(logedUser(user)); // Dispatch with serializable data
+      localStorage.setItem("user", JSON.stringify(user));
+      set(push(ref(db, 'users')), {
+        username: userData.displayName,
+        email: userData.email,
+        profile_picture: userData.photoURL
+      })
     })
   }
   
@@ -136,13 +188,13 @@ const Login = () => {
               <Paragraph title="Your social platform" />
               <Button onClick={handleGoogle} sx={{ mt:3, ml:0, py:1, width:'40%' }} variant="contained">Sign in with Google</Button>
               <Button onClick={handleFb} sx={{ mt:3, ml:2, py:1, width:'45%', fontWeight:600 }} variant="outlined">Sign in with Facebook</Button>
-              <TextField onChange={handleChange} name='email' sx={{ mt:3, width:'90%' }} type='email' id="filled-basic" label="Email" variant="filled" />
+              <TextField onChange={handleChange} name='email' sx={{ mt:3, width:'90%' }} type='email' id="filled-basic-email" label="Email" variant="filled" />
               {emailError &&
               <Alert sx={{width:'83%' }} variant="filled" severity="error">
                 {emailError}
               </Alert>
               }
-              <TextField onChange={handleChange} name='password' sx={{ mt:3, width:'90%' }} type={show?'text':'password'} id="filled-basic" label="Password" variant="filled" />
+              <TextField onChange={handleChange} name='password' sx={{ mt:3, width:'90%' }} type={show?'text':'password'} id="filled-basic-password" label="Password" variant="filled" />
               {show?
               <AiFillEyeInvisible onClick={() => setShow(false)} className='eyecon' />
               :

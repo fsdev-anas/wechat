@@ -25,3 +25,81 @@
 .Paragraph2{
     margin-top: 12px !important
 }
+
+.uname{
+    font-size: 20px;
+}
+
+/* Vertical bar */
+.sidebarimg{
+    height: 15%;
+    width: 52%;
+    border-radius: 50%;
+}
+
+.verticalBar ul li{
+    font-size: 44px;
+    margin: 45px 0;
+    list-style: none;
+}
+
+.verticalBar .active{
+    position: relative;
+    z-index: 2;
+}
+.verticalBar .active::after{
+    position: absolute;
+    content: "";
+    top: -20px;
+    left: 12%;
+    background-color: white;
+    z-index: -1;
+    width: 88%;
+    height: 80px;
+    border-bottom-left-radius: 25px;
+    border-top-left-radius: 10px;
+}
+.verticalBar .active::before{
+    position: absolute;
+    content: "";
+    top: -20px;
+    left: 94.5%;
+    background-color: #5F35F5;
+    z-index: 1;
+    width: 5.5%;
+    height: 80px;
+    border-bottom-left-radius: 7px;
+    border-top-left-radius: 7px;
+}
+
+/* GroupLists */
+.box{
+    height: 48vh;
+    width: 98%;
+    background-color: white;
+    border-radius: 20px;
+    padding: 13px 20px;
+    box-sizing: border-box;
+    margin-top: 2.5vh;
+    overflow-y: scroll;
+    box-shadow: 13px 9px 16px -3px rgba(0,0,0,0.1);
+
+}
+.list{
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+    padding-bottom: 13px;
+    margin-top: 17px;
+    
+}
+.list:last-child{
+    border-bottom: none;
+}
+
+.groupimg{
+    width: 15%;
+    height: 6.5vh;
+    border-radius: 50%;
+}
