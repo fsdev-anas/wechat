@@ -4,21 +4,20 @@ import Button from '@mui/material/Button';
 import Images from './Images'
 import GroupImg from '../assets/groupimg.png'
 import Paragraph from './Paragraph';
-import { getDatabase, ref, onValue, remove } from "firebase/database";
-import { useDispatch, useSelector } from 'react-redux';
+import { getDatabase, set, ref, onValue, remove, push } from "firebase/database";
+import { useSelector } from 'react-redux';
 
 const Friendrequest = () => {
-  const dispatch = useDispatch();
   const db = getDatabase();
   let [requestList,setRequestList] = useState([]);
   const userInfo = useSelector((state) => state.loginUser.value)
 
   useEffect(() => {
-    const requestRef = ref(db, 'friendrequest');
+    const requestRef = ref(db, 'frndReq');
     onValue(requestRef, (snapshot) => {
     let arr = [];
     snapshot.forEach((item) => {
-      if (item.val().whoreceiveuid == userInfo.uid) {
+      if (item.val().whoreceiveId == userInfo.uid) {
         arr.push({...item.val(),userID:item.key})
       }
     })
@@ -27,8 +26,18 @@ const Friendrequest = () => {
 },[])
 
 let handleDelete = (item) => {
-  remove(ref(db, 'friendrequest/' + item.userID))
+  remove(ref(db, 'frndReq/' + item.userID))
 }
+
+let handleAccept = (item) => {
+  set(push(ref(db, 'frnds')), {
+    ...item
+  }).then(() => {
+    remove(ref(db, 'frndReq/' + item.userID))
+  })
+}
+
+
 
 
   return (
@@ -38,8 +47,8 @@ let handleDelete = (item) => {
             requestList.map((item,index) => (
                 <div className='list' key={index} >
                     <Images className='groupimg' src={GroupImg} />
-                    <Paragraph className='uname' title={item.whosendname} />
-                    <Button variant="contained">Accept</Button>
+                    <Paragraph className='uname' title={item.whosendName} />
+                    <Button onClick={() => handleAccept(item)} variant="contained">Accept</Button>
                     <Button onClick={() => handleDelete(item)} variant="contained" color='error'>Delete</Button>
                 </div>
             ))

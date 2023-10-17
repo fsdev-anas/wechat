@@ -11,7 +11,7 @@ import Paragraph from '../components/Paragraph';
 import Alert from '@mui/material/Alert';
 import {AiFillEye,AiFillEyeInvisible} from 'react-icons/ai'
 import { getAuth, createUserWithEmailAndPassword, sendEmailVerification, updateProfile } from 'firebase/auth'
-import { getDatabase, ref, set, push } from "firebase/database";
+import { getDatabase, ref, set } from "firebase/database";
 import { RotatingLines } from  'react-loader-spinner'
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';

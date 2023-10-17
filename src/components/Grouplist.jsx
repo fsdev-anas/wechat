@@ -15,26 +15,6 @@ const Grouplist = () => {
             <Paragraph className='uname' title='Friends Reunion' />
             <Button variant="contained">Join</Button>
         </div>
-        <div className='list'>
-            <Images className='groupimg' src={GroupImg} />
-            <Paragraph className='uname' title='Friends Reunion' />
-            <Button variant="contained">Join</Button>
-        </div>
-        <div className='list'>
-            <Images className='groupimg' src={GroupImg} />
-            <Paragraph className='uname' title='Friends Reunion' />
-            <Button variant="contained">Join</Button>
-        </div>
-        <div className='list'>
-            <Images className='groupimg' src={GroupImg} />
-            <Paragraph className='uname' title='Friends Reunion' />
-            <Button variant="contained">Join</Button>
-        </div>
-        <div className='list'>
-            <Images className='groupimg' src={GroupImg} />
-            <Paragraph className='uname' title='Friends Reunion' />
-            <Button variant="contained">Join</Button>
-        </div>
     </div>
   )
 }

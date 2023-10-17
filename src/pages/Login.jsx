@@ -145,7 +145,8 @@ const Login = () => {
         email: userData.email,
         displayName: userData.displayName,
         photoURL: userData.photoURL,
-      };      dispatch(logedUser(user)); // Dispatch with serializable data
+      };      
+      dispatch(logedUser(user)); // Dispatch with serializable data
       localStorage.setItem("user", JSON.stringify(user));
       set(ref(db, 'users/'+ userData.uid), {
         username: userData.displayName,
@@ -168,7 +169,7 @@ const Login = () => {
       };
       dispatch(logedUser(user)); // Dispatch with serializable data
       localStorage.setItem("user", JSON.stringify(user));
-      set(push(ref(db, 'users')), {
+      set(ref(db, 'users/'+ userData.uid), {
         username: userData.displayName,
         email: userData.email,
         profile_picture: userData.photoURL

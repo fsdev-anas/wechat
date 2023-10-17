@@ -49,7 +49,7 @@ const Sidebar = () => {
             <Link to='/settings'><FiSettings /></Link>
             </li>
             <li>
-            <Link onClick={handleLogOut} to='/msg'><AiOutlineLogout /></Link>
+            <Link onClick={handleLogOut}><AiOutlineLogout /></Link>
             </li>
         </ul>
     </div>
